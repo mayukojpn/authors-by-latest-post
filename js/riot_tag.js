@@ -103,18 +103,15 @@
 		}
 	}
 </style>
-	var count    = opts.count;
 	var self     = this;
-	var per_page = 20;
-	var url      = resource_url + '/wp-json/wp/v2/';
 	jQuery(function($) {
 		$.ajax({
-			url: url + 'users',
+			url: resource_url + '/wp-json/wp/v2/users',
 			type:'GET',
 			dataType: 'json',
 			data : {
-				page: count,
-				per_page: per_page,
+				page: opts.count,
+				per_page: opts.per_page,
 				filter : {
 				}
 			},
@@ -127,11 +124,14 @@
 			var scrollHeight = $(document).height();
 			var scrollPosition = $(window).height() + $(window).scrollTop();
 			if ((scrollHeight - scrollPosition) / scrollHeight      === 0
-			&& jQuery('#authors-by-latest-post').children().last().children().length === per_page
-			&& jQuery('#authors-by-latest-post').children().last().attr('count')     === count ) {
-				count++;
-				jQuery('#authors-by-latest-post').append('<div id="author-list-' + count + '" count="' + count + '"></div>');
-				riot.mount( 'div#author-list-' + count, 'cards' );
+			if (
+				scrollHeight - scrollPosition <= 0
+				&& $('#authors-by-latest-post').children().last().children().length == opts.per_page
+				&& $('#authors-by-latest-post').children().last().attr('count')     == opts.count
+			) {
+				opts.count++;
+				$('#authors-by-latest-post').append('<div id="author-list-' + opts.count + '" count="' + opts.count + '"></div>');
+				riot.mount( 'div#author-list-' + opts.count, 'cards' );
 			}
 		});
 	});

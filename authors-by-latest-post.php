@@ -20,7 +20,7 @@ class Authors_By_Latest_Post {
 
 		require_once plugin_dir_path( __FILE__ ) . 'classes/class.rest-api.php';
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
-		add_shortcode( 'authors'    , array( 'Authors_By_Latest_Post', 'display_authors' ) );
+		add_shortcode( 'authors_by_latest_post', array( $this, 'display_authors' ) );
 
 	}
 	function plugins_loaded() {
@@ -38,7 +38,15 @@ class Authors_By_Latest_Post {
 		return preg_replace("/type='text\/javascript'/", 'type="riot/tag"', $tag, 1 );
 	}
 
-	static function display_authors( $order = 'ASC' ) {
+	static function display_authors( $atts ) {
+
+		$atts = shortcode_atts(
+			array(
+				'per_page'     => get_option( 'posts_per_page' ),
+				'show_profile' => 'true',
+				'default'      => '',
+			), $atts, 'authors_by_latest_post'
+		);
 
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'less',     plugin_dir_url( __FILE__ ).'/js/less.min.js',          array(), false, true );
@@ -52,7 +60,7 @@ class Authors_By_Latest_Post {
 			$paged );
 		wp_add_inline_script( 'riot_tag', $script );
 
-		return '<div id="authors-by-latest-post"><div id="author-list-' . $paged . '" count="' . $paged . '"></div></div>';
+		return '<div id="authors-by-latest-post"><div id="author-list-' . $paged . '" count="' . $paged . '" per_page="' .$atts['per_page']. '"></div></div>';
 
 	}
 	/**
