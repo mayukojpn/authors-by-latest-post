@@ -121,9 +121,8 @@
 			self.update()
 		});
 		$(window).on("scroll", function() {
-			var scrollHeight = $(document).height();
+			var scrollHeight   = $('#authors-by-latest-post').height() + $('#authors-by-latest-post').offset().top;
 			var scrollPosition = $(window).height() + $(window).scrollTop();
-			if ((scrollHeight - scrollPosition) / scrollHeight      === 0
 			if (
 				scrollHeight - scrollPosition <= 0
 				&& $('#authors-by-latest-post').children().last().children().length == opts.per_page
