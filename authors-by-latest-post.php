@@ -45,11 +45,14 @@ class Authors_By_Latest_Post {
     wp_enqueue_script( 'riot',     plugin_dir_url( __FILE__ ).'/js/riot+compiler.min.js', array(), false, true );
 		wp_enqueue_script( 'riot_tag', plugin_dir_url( __FILE__ ).'/js/riot_tag.js',          array( 'jquery', 'less', 'riot' ), date('Y-m-d-His') );
 
+		$paged  = get_query_var( 'paged', 1 );
 		$script = sprintf( 'var resource_url = "%s";', home_url() );
-		$script = $script . 'riot.mount( "div#page-1", "cards" )';
+		$script = $script . sprintf(
+			'riot.mount( "div#author-list-%d", "cards" )',
+			$paged );
 		wp_add_inline_script( 'riot_tag', $script );
 
-		return '<div id="pages"><div id="page-1" count="1" data="{ data }"></div></div>';
+		return '<div id="authors-by-latest-post"><div id="author-list-' . $paged . '" count="' . $paged . '"></div></div>';
 
 	}
 	/**
@@ -87,7 +90,7 @@ class Authors_By_Latest_Post {
 				'time'      => $post->post_date,
 				'published' => human_time_diff( get_the_time( 'U', $post->ID ) ),
 				'permalink' => get_the_permalink($post->ID),
-				'thumbnail' => get_the_post_thumbnail_url( $post->ID, 'medium_large' )
+				'thumbnail' => get_the_post_thumbnail_url( $post->ID, 'medium' )
 			);
 		}
 		return $posts;

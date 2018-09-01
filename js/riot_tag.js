@@ -7,22 +7,23 @@
 
 	<div class='header'>
 
-		<a href={ link } >
-			<img class='icon' src={ avatar_urls['96'] } />
+		<a class="avatar" href={ link }>
+			<img class="icon" src={ avatar_urls['96'] } />
 		</a>
-		<div class="header-image">
+		<a class="header-image"  href={ link }>
 			<img src={ posts[0].thumbnail }>
-		</div>
+		</a>
 
 	</div>
 
 	<div class='body'>
 
-	<a class="name" href={ link } >{ name }</a> <time>最後の更新: { posts[0].published }前</time>
+	<a class="name" href={ link }>{ name }</a> <time>最後の更新: { posts[0].published }前</time>
 
 
 		<div class='row'>
 			<posts posts={ posts }/>
+			<a class="more" if={ post_count > 3 } href={ link }>もっと見る →</a>
 		</div><!-- end .row -->
 
 	</div>
@@ -56,15 +57,16 @@
 			img {
 				width: 100%;
 			}
-			a {
+			.avatar {
 				position: absolute;
 				bottom: -60px;
 				left: 16px;
-			}
-			.icon {
-				width: 96px;
-				border-radius: 50%;
-				border: 4px solid white;
+				z-index: 1;
+				img {
+					width: 96px;
+					border-radius: 50%;
+					border: 4px solid white;
+				}
 			}
 			.header-image {
 		    display: block;
@@ -73,7 +75,6 @@
 				width: 100%;
 				overflow: hidden;
 				background-color: #eee;
-				z-index: -1;
 				img {
 					position: relative;
 					top: 50%;
@@ -93,15 +94,19 @@
 				margin-left: 106px;
 				display: inline-block;
 			}
-			ul {
-				margin: 0 0 0 15px;
+			.row {
+				text-align: right;
+			}
+			posts {
+				text-align: left;
 			}
 		}
 	}
 </style>
-	var count = opts.count;
-	var self  = this;
-	var url   = resource_url + '/wp-json/wp/v2/';
+	var count    = opts.count;
+	var self     = this;
+	var per_page = 20;
+	var url      = resource_url + '/wp-json/wp/v2/';
 	jQuery(function($) {
 		$.ajax({
 			url: url + 'users',
@@ -109,7 +114,7 @@
 			dataType: 'json',
 			data : {
 				page: count,
-				per_page: 20,
+				per_page: per_page,
 				filter : {
 				}
 			},
@@ -122,11 +127,11 @@
 			var scrollHeight = $(document).height();
 			var scrollPosition = $(window).height() + $(window).scrollTop();
 			if ((scrollHeight - scrollPosition) / scrollHeight      === 0
-			&& jQuery('#pages').children().last().children().length >= 1
-			&& jQuery('#pages').children().last().attr('count')     === count ) {
-			    console.log(count++);
-					jQuery('#pages').append('<div id="page-' + count + '" count="' + count + '"></div>');
-					riot.mount( 'div#page-' + count, 'cards' );
+			&& jQuery('#authors-by-latest-post').children().last().children().length === per_page
+			&& jQuery('#authors-by-latest-post').children().last().attr('count')     === count ) {
+				count++;
+				jQuery('#authors-by-latest-post').append('<div id="author-list-' + count + '" count="' + count + '"></div>');
+				riot.mount( 'div#author-list-' + count, 'cards' );
 			}
 		});
 	});

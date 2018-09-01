@@ -26,6 +26,13 @@ class Authors_By_Latest_Post_Rest_API {
 				'schema'            => null,
 			)
 		);
+		register_rest_field( 'user', 'post_count',
+			array(
+				'get_callback'      => array( $this, 'rest_callback_get_post_count' ),
+				'update_callback'   => null,
+				'schema'            => null,
+			)
+		);
 		register_rest_field( 'user', 'posts',
 			array(
 				'get_callback'      => array( $this, 'rest_callback_get_posts' ),
@@ -38,16 +45,16 @@ class Authors_By_Latest_Post_Rest_API {
 	function rest_callback_get_field( $user, $field_name ) {
 		return get_user_meta( $user[ 'id' ], $field_name, true );
 	}
+	function rest_callback_get_post_count( $user ){
+		return count_user_posts( $user[ 'id' ] );
+	}
 
 	function rest_callback_get_last_published( $user ) {
-		$time = get_user_meta( $user[ 'id' ], 'last_published', true );
-		//$time = human_time_diff( get_the_time( 'U', $time ), time( 'U' ) );
-		return $time;
+		return get_user_meta( $user[ 'id' ], 'last_published', true );
 	}
+
 	function rest_callback_get_posts( $user, $field_name, $request) {
 		return Authors_By_Latest_Post::get_post_query( $user[ 'id' ], 3 );
-
-		return $posts;
 	}
 
 
