@@ -30,20 +30,22 @@
 	</div>
 
 <style scoped type='less'>
-@media (min-width: 767px) {
+
 	:scope {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		grid-gap: 20px;
-		margin-bottom: 20px;
-	}
-}
-	:scope {
+		@media (min-width: 767px) {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-gap: 20px;
+			margin-bottom: 20px;
+		}
 
 		.author {
 			border: 1px solid #e9e9e9;
 			min-height: 200px;
 			margin-bottom: 20px;
+			@media (min-width: 767px) {
+				margin-bottom: 0;
+			}
 		}
 
 		.row {
