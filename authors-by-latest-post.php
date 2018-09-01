@@ -54,6 +54,7 @@ class Authors_By_Latest_Post {
 		wp_enqueue_script( 'riot_tag', plugin_dir_url( __FILE__ ).'/js/riot_tag.js',          array( 'jquery', 'less', 'riot' ), date('Y-m-d-His') );
 
 		$paged  = get_query_var( 'paged', 1 );
+		$paged  = ( $paged > 0 ) ? $paged : 1;
 		$script = sprintf( 'var resource_url = "%s";', home_url() );
 		$script = $script . sprintf(
 			'riot.mount( "div#author-list-%d", "cards" )',
