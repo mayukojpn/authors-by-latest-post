@@ -2,7 +2,7 @@
 * Custom Tag: Cards
 * Generate author profile cards.
 */
-<cards>
+<cards class="max-column-{ opts.max_column } per-page-{ opts.per_page }">
 <div each={ users } class="author">
 
 	<div class='header'>
@@ -32,12 +32,31 @@
 <style scoped type='less'>
 
 	:scope {
-		@media (min-width: 767px) {
+		@media (min-width: 768px) {
 			display: grid;
-			grid-template-columns: 1fr 1fr;
 			grid-gap: 20px;
 			margin-bottom: 20px;
+			&.max-column-2,
+			&.max-column-3 {
+				grid-template-columns: 1fr 1fr;
+			}
 		}
+		@media (min-width: 900px) {
+			&.max-column-3 {
+				grid-template-columns: 1fr 1fr 1fr;
+				&.per-page-4 .author:last-child {
+					display: none;
+				}
+			}
+		}
+		@media (min-width: 768px ) and ( max-width: 890px) {
+			&.max-column-3 {
+				&.per-page-3 .author:last-child {
+					display: none;
+				}
+			}
+		}
+
 
 		.author {
 			border: 1px solid #e9e9e9;
@@ -93,15 +112,26 @@
 				font-weight: bold;
 			}
 			.name + time {
-				margin-left: 106px;
+				@media (min-width: 768px) {
+					margin-left: 106px;
+				}
 				display: inline-block;
 			}
 			.row {
 				text-align: right;
-			}
-			posts {
-				text-align: left;
-			}
+				posts {
+					time, a {
+						display: block;
+						text-align: left;
+					}
+				}
+				@media (min-width: 480px) {
+					posts {
+						display: grid;
+						grid-template-columns: 8em auto;
+					}
+				}
+			} // .row
 		}
 	}
 </style>
@@ -121,19 +151,21 @@
 		}).done(function( users ){
 			self.users = users
 			self.update()
-		});
-		$(window).on("scroll", function() {
-			var scrollHeight   = $('#authors-by-latest-post').height() + $('#authors-by-latest-post').offset().top;
-			var scrollPosition = $(window).height() + $(window).scrollTop();
-			if (
-				scrollHeight - scrollPosition <= 0
-				&& $('#authors-by-latest-post').children().last().children().length == opts.per_page
-				&& $('#authors-by-latest-post').children().last().attr('count')     == opts.count
-			) {
-				opts.count++;
-				$('#authors-by-latest-post').append('<div id="author-list-' + opts.count + '" count="' + opts.count + '"></div>');
-				riot.mount( 'div#author-list-' + opts.count, 'cards' );
-			}
+			if ( opts.infinite ) {
+				$(window).on("scroll", function() {
+					var scrollHeight   = $('#authors-by-latest-post').height() + $('#authors-by-latest-post').offset().top;
+					var scrollPosition = $(window).height() + $(window).scrollTop();
+					if (
+						scrollHeight - scrollPosition <= 0
+						&& $('#authors-by-latest-post').children().last().children().length == opts.per_page
+						&& $('#authors-by-latest-post').children().last().attr('count')     == opts.count
+					) {
+						opts.count++;
+						$('#authors-by-latest-post').append('<div id="author-list-' + opts.count + '" count="' + opts.count + '"></div>');
+						riot.mount( 'div#author-list-' + opts.count, 'cards' );
+					}
+				});
+			} // endif opts.infinite
 		});
 	});
 
@@ -146,7 +178,6 @@
 * http://riotjs.com/ja/guide/#html
 */
 <raw>
-<span></span>
 this.root.innerHTML = opts.content
 </raw>
 
@@ -155,12 +186,6 @@ this.root.innerHTML = opts.content
 */
 <format-date>
 <time>{ formatted }<time>
-
-<style scoped type='less'>
-:scope {
-	display: inline-block;
-}
-</style>
 var date = new Date(opts.date),
 	y = date.getFullYear(),
 	m = date.getMonth() + 1,
@@ -179,10 +204,4 @@ this.formatted = y +'/'+ m +'/'+ d +' ('+ day +')';
 	<format-date date={ time }></format-date>
 	<a href={ permalink }><raw content={ title } /></a>
 </virtual>
-<style scoped type='less'>
-	:scope {
-		display: grid;
-		grid-template-columns: 8em auto;
-	}
-</style>
 </posts>

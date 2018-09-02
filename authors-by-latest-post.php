@@ -43,7 +43,9 @@ class Authors_By_Latest_Post {
 		$atts = shortcode_atts(
 			array(
 				'per_page'     => get_option( 'posts_per_page' ),
-				'show_profile' => 'true',
+				'infinite'     => false,
+				'max_column'   => 2,
+				'show_profile' => true,
 				'default'      => '',
 			), $atts, 'authors_by_latest_post'
 		);
@@ -54,14 +56,24 @@ class Authors_By_Latest_Post {
 		wp_enqueue_script( 'riot_tag', plugin_dir_url( __FILE__ ).'/js/riot_tag.js',          array( 'jquery', 'less', 'riot' ), date('Y-m-d-His') );
 
 		$paged  = get_query_var( 'paged', 1 );
-		$paged  = ( $paged > 0 ) ? $paged : 1;
+		$paged  = ( is_numeric( $paged ) && $paged > 0 ) ? $paged : 1;
 		$script = sprintf( 'var resource_url = "%s";', home_url() );
 		$script = $script . sprintf(
 			'riot.mount( "div#author-list-%d", "cards" )',
 			$paged );
 		wp_add_inline_script( 'riot_tag', $script );
 
-		return '<div id="authors-by-latest-post"><div id="author-list-' . $paged . '" count="' . $paged . '" per_page="' .$atts['per_page']. '"></div></div>';
+		$output = sprintf(
+			'id="author-list-%s" count="%s" per_page="%s" infinite="%s" max_column="%s"',
+			$paged,
+			$paged,
+			esc_html( $atts['per_page'] ),
+			esc_html( $atts['infinite'] ),
+			esc_html( $atts['max_column'] )
+		);
+		$output = '<div ' . $output . '></div>';
+
+		return '<div id="authors-by-latest-post">' . $output . '</div>';
 
 	}
 	/**
