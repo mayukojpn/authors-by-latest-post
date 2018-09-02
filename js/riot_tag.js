@@ -135,7 +135,7 @@
 		}
 	}
 </style>
-	var self     = this;
+	var self = this;
 	jQuery(function($) {
 		$.ajax({
 			url: resource_url + '/wp-json/wp/v2/users',
@@ -161,7 +161,15 @@
 						&& $('#authors-by-latest-post').children().last().attr('count')     == opts.count
 					) {
 						opts.count++;
-						$('#authors-by-latest-post').append('<div id="author-list-' + opts.count + '" count="' + opts.count + '"></div>');
+						$('#authors-by-latest-post').append(
+							$('<div></div>')
+								.attr( 'id',         "author-list-"+opts.count )
+								.attr( 'count',      opts.count )
+								.attr( 'per_page',   opts.per_page )
+								.attr( 'infinite',   opts.infinite )
+								.attr( 'max_column', opts.max_column )
+						);
+
 						riot.mount( 'div#author-list-' + opts.count, 'cards' );
 					}
 				});
