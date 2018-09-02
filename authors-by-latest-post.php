@@ -6,7 +6,7 @@
 /*
 Plugin Name: Authors By Latest Post
 Version: 0.1
-Description: Displays authors
+Description: Display writer list of your blog in order of their last published date and time.
 Author: Mayo Moriyama
 */
 class Authors_By_Latest_Post {
