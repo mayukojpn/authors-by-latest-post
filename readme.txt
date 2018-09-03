@@ -14,7 +14,7 @@ Display writer list of your blog in order of their last published date and time.
 
 Display writer list of your blog in order of their last published date and time.
 
-Author list will be called by using shortcode `authors_by_latest_post`.
+Author list will be called by using shortcode `[authors_by_latest_post]`.
 
 This plugin will modify and get [`users`](https://developer.wordpress.org/rest-api/reference/users/) end point of WP REST API v2. Make sure your WP API is enabled on your site.
 
@@ -22,7 +22,7 @@ Author card's UI supports only Japanese for now.
 
 == Shortcode Usage ==
 
-shortcode `authors_by_latest_post` supports these options:
+shortcode `[authors_by_latest_post]` supports these options:
 
 * `per_page`: Accepts numbers. Author display number for one page or loading.
 * `max_column`: Accepts 2 or 3. Maximum column number for wide screen.
