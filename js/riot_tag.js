@@ -11,7 +11,9 @@
 			<img class="icon" src={ avatar_urls['96'] } />
 		</a>
 		<a class="header-image"  href={ link }>
-			<img src={ posts[0].thumbnail }>
+			<img show={ posts[0].thumbnail } src={ posts[0].thumbnail }>
+			<img hide={ posts[0].thumbnail } src={ posts[1].thumbnail }>
+			<img hide={ posts[0].thumbnail && posts[1].thumbnail } src={ posts[2].thumbnail }>
 		</a>
 
 	</div>
