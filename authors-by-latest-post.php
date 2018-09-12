@@ -155,6 +155,14 @@ class Authors_By_Latest_Post {
 							);
 						}
 					} // endforeach;
+				}
+				else {
+					update_user_meta(
+						$author_id,
+						'last_published',
+						''
+					);
+
 				} // endif;
 
 			endforeach;
