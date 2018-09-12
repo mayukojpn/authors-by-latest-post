@@ -19,13 +19,13 @@ class Authors_By_Latest_Post {
   function __construct() {
 
 		require_once plugin_dir_path( __FILE__ ) . 'classes/class.rest-api.php';
-		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+		add_action( 'plugins_loaded',            array( $this, 'plugins_loaded' ) );
+		add_action( 'transition_post_status',    array( $this, 'update_last_published' ), 10, 3 );
 		add_shortcode( 'authors_by_latest_post', array( $this, 'display_authors' ) );
+		register_activation_hook( __FILE__,      array( $this, 'bulk_update'           ) );
 
 	}
 	function plugins_loaded() {
-
-		require_once plugin_dir_path( __FILE__ ) . 'classes/class.update.php';
 
 		add_filter( 'script_loader_tag',      array( $this, 'add_riot_to_script'    ), 10, 2 );
 
@@ -82,7 +82,7 @@ class Authors_By_Latest_Post {
 	 * @param string $author_id Author ID
 	 * @return Post_Query|WP_Error Post list if available, error otherwise.
 	 */
-	static function get_post_query( $author_id = 0, $posts_per_page = 0 ) {
+	static function get_post_query( $author_id = 0, $posts_per_page = 1 ) {
 
 		if ( $author_id == 0 ) {
 			return new WP_Error( 'ap_no_author', __( 'Author not defined.', 'authors-by-latest-post' ) );
@@ -116,5 +116,50 @@ class Authors_By_Latest_Post {
 		}
 		return $posts;
 	}
+	/**
+	 * Fire a callback only when my-custom-post-type posts are transitioned to 'publish'.
+	 *
+	 * @param string  $new_status New post status.
+	 * @param string  $old_status Old post status.
+	 * @param WP_Post $post       Post object.
+	 */
+	function update_last_published( $new_status, $old_status, $post ) {
+		if ( ( 'publish' === $new_status && 'publish' !== $old_status )
+			&& 'post' === $post->post_type
+		) {
+			update_user_meta(
+				$post->post_author,
+				'last_published',
+				$post->post_date
+			);
+		}
+	}
+	function bulk_update() {
+
+		$wp_user_query = new WP_User_Query( array( 'role__not_in' => 'Subscriber' ) );
+		$authors       = $wp_user_query->get_results();
+
+		if ( !empty( $authors ) ) {
+
+			foreach ($authors as $author) :
+				$author_id = $author->ID;
+				$query     = self::get_post_query( $author_id );
+
+				if ( !empty( $query ) ) {
+					foreach ( $query as $recent_post ) {
+						if ( $time = $recent_post['time'] ){
+							update_user_meta(
+								$author_id,
+								'last_published',
+								$time
+							);
+						}
+					} // endforeach;
+				} // endif;
+
+			endforeach;
+		}
+	}
+
 }
-new  Authors_By_Latest_Post;
+new Authors_By_Latest_Post;
