@@ -46,6 +46,7 @@ class Authors_By_Latest_Post {
 				'infinite'     => false,
 				'max_column'   => 2,
 				'show_profile' => true,
+				'exclude'      => '',
 				'default'      => '',
 			), $atts, 'authors_by_latest_post'
 		);
@@ -64,12 +65,13 @@ class Authors_By_Latest_Post {
 		wp_add_inline_script( 'riot_tag', $script );
 
 		$output = sprintf(
-			'id="author-list-%s" count="%s" per_page="%s" infinite="%s" max_column="%s"',
+			'id="author-list-%s" count="%s" per_page="%s" infinite="%s" max_column="%s" exclude="%s"',
 			$paged,
 			$paged,
 			esc_html( $atts['per_page'] ),
 			esc_html( $atts['infinite'] ),
-			esc_html( $atts['max_column'] )
+			esc_html( $atts['max_column'] ),
+			esc_html( $atts['exclude'] ),
 		);
 		$output = '<div ' . $output . '></div>';
 

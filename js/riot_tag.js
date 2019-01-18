@@ -146,6 +146,7 @@
 			data : {
 				page: opts.count,
 				per_page: opts.per_page,
+				exclude: opts.exclude,
 				filter : {
 				}
 			},
