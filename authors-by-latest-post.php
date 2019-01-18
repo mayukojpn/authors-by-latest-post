@@ -71,7 +71,7 @@ class Authors_By_Latest_Post {
 			esc_html( $atts['per_page'] ),
 			esc_html( $atts['infinite'] ),
 			esc_html( $atts['max_column'] ),
-			esc_html( $atts['exclude'] ),
+			esc_html( $atts['exclude'] )
 		);
 		$output = '<div ' . $output . '></div>';
 
