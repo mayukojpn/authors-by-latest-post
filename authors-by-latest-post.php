@@ -46,7 +46,7 @@ class Authors_By_Latest_Post {
 				'infinite'     => false,
 				'max_column'   => 2,
 				'show_profile' => true,
-				'exclude'      => '',
+				'exclude'      => 0,
 				'default'      => '',
 			), $atts, 'authors_by_latest_post'
 		);

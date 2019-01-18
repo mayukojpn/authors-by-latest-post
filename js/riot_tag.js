@@ -171,6 +171,7 @@
 								.attr( 'per_page',   opts.per_page )
 								.attr( 'infinite',   opts.infinite )
 								.attr( 'max_column', opts.max_column )
+								.attr( 'exclude',    opts.exclude )
 						);
 
 						riot.mount( 'div#author-list-' + opts.count, 'cards' );
